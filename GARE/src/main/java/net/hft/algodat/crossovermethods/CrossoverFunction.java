@@ -10,6 +10,8 @@ import java.util.List;
 import net.hft.algodat.framework.geneticalgorithm.base.GeneticAlgorithm;
 import net.hft.algodat.framework.geneticalgorithm.entities.Individual;
 import net.hft.algodat.framework.geneticalgorithm.functions.Crossover;
+import net.hft.algodat.framework.geneticalgorithm.utilities.Utilities;
+import net.hft.alogdat.selectionmethods.TournamentSelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CrossoverFunction implements Crossover{
     
-    private final static Logger LOGGER = LoggerFactory.getLogger(GeneticAlgorithm.class);
+    private final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CrossoverFunction.class);
 
     public void executeCrossover(List<Individual> population)
     {
@@ -43,7 +45,7 @@ public class CrossoverFunction implements Crossover{
     private void onePointCrossover(Individual mother, Individual father)
     {
         // compute crossover point
-        int crossPoint = getRandomIntegerInBetween(1, mother.jobListe.length-1);
+        int crossPoint = TournamentSelection.getRandomIntegerInBetween(1, mother.jobListe.length-1);
       
         // create son and daugther
         Individual daugther = createChildFromParents(mother, father, crossPoint);
@@ -109,11 +111,7 @@ public class CrossoverFunction implements Crossover{
         }
         return false;
     } 
-    
-    private static int getRandomIntegerInBetween(int min, int max) {
-        return min + (int) (Math.random() * ((max - min) + 1));
-    }     
-    
+        
     private String jobListToString(Individual individual)
     {
         String outputText = "";

@@ -24,7 +24,7 @@ public class TournamentSelection implements Selection {
         return getRandomIntegerInBetween(min, population.size() - 1);
     }
 
-    private static int getRandomIntegerInBetween(int min, int max) {
+    public static int getRandomIntegerInBetween(int min, int max) {
         return min + (int) (Math.random() * ((max - min) + 1));
     }
 
