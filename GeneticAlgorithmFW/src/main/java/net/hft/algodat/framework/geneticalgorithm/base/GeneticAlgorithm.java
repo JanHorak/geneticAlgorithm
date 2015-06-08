@@ -48,7 +48,14 @@ public final class GeneticAlgorithm implements Algorithm {
     private int populationSize;
     private URL jobFilepath;
     private URL resFilepath;
-
+    
+    float probStartUp;
+    float probGA;
+    
+    int amountMutationStartUp;
+    int amountMutationsGA;
+    
+    
     // Parts
     @PartOfAlgorithm
     private Selection selectionMethod;
@@ -132,14 +139,16 @@ public final class GeneticAlgorithm implements Algorithm {
         LOGGER.info("Population created");
 
         // GA- mainpart
+        boolean startUp = true;
         do {
+            if (startUp) {
+                this.mutationMethod.executeMutation(population, probStartUp, amountMutationStartUp);
+                startUp = false;
+            }
             List<Individual> populationAfterSelection = this.selectionMethod.executeSelection(population);
-            if (this.crossoverMethod != null)
-                this.crossoverMethod.executeCrossover(populationAfterSelection);
-            if (this.mutationMethod != null)
-                this.mutationMethod.executeMutation(populationAfterSelection);
-            if (this.replacementMethod != null)
-                this.replacementMethod.executeReplacement(population);
+            this.crossoverMethod.executeCrossover(populationAfterSelection);
+            this.mutationMethod.executeMutation(populationAfterSelection, probGA, amountMutationsGA);
+            this.replacementMethod.executeReplacement(population);
 
             this.maxFitnessInIteration = Utilities.getFittestInPopulation(population).getFitness();
             this.amountOfConvergence = population;
@@ -167,6 +176,11 @@ public final class GeneticAlgorithm implements Algorithm {
         this.resFilepath = getClass().getResource(properties.get("resourceList"));
         this.type = TypeOfRuntime.valueOf(properties.get("runtime"));
         this.amountOfConvergence = new ArrayList<>();
+        this.amountMutationsGA = Integer.valueOf(properties.get("amountMutationGA"));
+        this.amountMutationStartUp = Integer.valueOf(properties.get("amountMutationStartup"));
+        this.probStartUp = Float.valueOf(properties.get("prob_startup"));
+        this.probGA = Float.valueOf(properties.get("prob_GA"));
+
         LOGGER.info("Filebased initializsation completed...");
     }
 
